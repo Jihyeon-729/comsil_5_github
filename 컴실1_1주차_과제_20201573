@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "working directory : "
+read dir
+
+if [ -z "$dir" ]; then
+	dir=$(dirname $(realpath $0))
+fi
+
+if cd $dir; then
+	for file in *
+	do
+		mv $file `echo $file | tr '[:upper:][:lower:]' '[:lower:][:upper:]'`
+		
+	done
+
+else
+	echo "Error message : there is no directory '$dir'."
+fi

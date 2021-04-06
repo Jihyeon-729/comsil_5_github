@@ -1,0 +1,57 @@
+#!/bin/bash
+cat mydata > tempAND
+cat mydata > tempData
+
+#and
+echo "AND 형식"		
+
+for x in $@;
+do
+	line=$(cat tempAND | egrep -i "$x");
+	echo "$line" > tempAND
+done
+
+if [ $# -gt 0 ]
+then
+	if [ -n "$line" ]; then
+		cat tempAND | awk -f display.awk
+	else
+		echo -e "There are no data that include all the words\n"
+	fi
+
+elif [ $# == 0 ] 
+then
+	echo "Usage: phone searchfor [...searchfor]";
+	echo "(You didn't tell me what you want to search for.)";
+fi
+rm tempAND
+
+#or
+echo "OR 형식"
+
+for x in $@;
+do
+	line=$(cat tempData | egrep -i "$x");
+	rmv=$(sed "/$x/d" tempData)
+	echo "$rmv" > tempData
+	if [ -n "$line" ]
+	then
+		echo "$line" >> tempOR
+	fi
+done
+
+if [ $# -gt 0 ]
+then
+	cat tempOR | awk -f display.awk
+	rm tempOR
+
+elif [ $# == 0 ] 
+then
+	echo "Usage: phone searchfor [...searchfor]";
+	echo "(You didn't tell me what you want to search for.)";
+fi
+
+rm tempData
+
+
+
